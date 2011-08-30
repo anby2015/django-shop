@@ -149,6 +149,8 @@ LOGGING = {
     }
 }
 
+REDIRECT_FIELD_NAME = 'next' #'next' is compatible with django.contrib.auth
+
 AUTH_PROFILE_MODULE = 'users.Profile'
 LOGIN_URL = '/users/login'
 LOGOUT_URL = '/users/logout'
