@@ -148,4 +148,8 @@ LOGGING = {
         },
     }
 }
+
 AUTH_PROFILE_MODULE = 'users.Profile'
+LOGIN_URL = '/users/login'
+LOGOUT_URL = '/users/logout'
+LOGIN_REDIRECT_URL = '/'
