@@ -64,3 +64,13 @@ class Logout(View):
         auth_logout(request.user)
         return HttpResponseRedirect(get_redirect_url(request))
 
+@csrf_protect
+@never_cache
+@unauthorized_only
+class Register(TemplateResponseMixin, BaseCreateView):
+
+    form_class = RegisterUserForm
+    redirect_field_name = settings.REDIRECT_FIELD_NAME
+    template_name = 'users/create.html'
+
+    get_context_data = LoginView.get_context_data
