@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import IntegerField, DateField, CharField, OneToOneField
+from django.db.models import IntegerField, DateField, CharField, TextField, OneToOneField
 from django.contrib.auth.models import User
 
 from users.fields import CountryField
@@ -17,3 +17,4 @@ class Profile(User):
     birthday = DateField()
     country = CountryField()
     city = CharField(max_length=200)
+    adress = TextField()
