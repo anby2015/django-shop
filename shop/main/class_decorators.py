@@ -33,8 +33,8 @@ def patches(method_name, deco=None):
         @wraps(deco) # never mind, just let it be
         def cls_deco(cls):
             old_func = getattr(cls, method_name)
-            deco = method_decorator(deco)
-            setattr(cls, method_name, wraps(old_func)(deco(old_func)))
+            new_func = method_decorator(deco)(old_func)
+            setattr(cls, method_name, wraps(old_func)(new_func))
             return cls
         return cls_deco
         
