@@ -1,0 +1,22 @@
+#promo_header{
+    font-size: 32pt;
+    text-align: center;
+}
+
+#welcome_auth_form p{
+    margin: 0;
+    line-height: 0.5;
+}
+
+#welcome_auth_form input{
+    width: 100px;
+    height: 10px;
+    margin: 2px 0 1px 0;
+}
+
+#top_userbar button{
+    height: 20px;
+    font-size: 50%;
+    width: 50px;
+    padding: 0;
+}
