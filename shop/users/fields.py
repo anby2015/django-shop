@@ -9,8 +9,8 @@ from users.countries import COUNTRIES
 
 
 class CountryField(models.CharField):
-    def __init(self, *args, **kwargs):
-        kwargs.setdefault('maxlength', 3)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('max_length', 3)
         kwargs.setdefault('choices', COUNTRIES)
 
         super(CountryField, self).__init__(*args, **kwargs)

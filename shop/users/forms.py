@@ -1,17 +1,22 @@
-from django.forms import ModelForm, RegexField
-from django.conf.settings import DEBUG
-from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm, RegexField, EmailField
+from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from users.models import Profile
 
+class AuthForm(AuthenticationForm):
+    error_css_class = 'error'
+
 class RegisterUserForm(UserCreationForm):
     username = RegexField(label=_("Username"), max_length=30, regex=r'^[\w]+$',
-        help_text = _("Required. 30 characters or fewer. Letters, digits and _ only."),
-        error_messages = {'invalid': _("This value may contain only letters, numbers and _ characters.")},
+        help_text=_("Required. 30 characters or fewer. Letters, digits and _ only."),
+        error_messages={'invalid': _("This value may contain only letters, numbers and _ characters.")},
     )
-    email = EmailField(label=_("Please, enter your e-mail for verification"), required=not DEBUG)
-error_css_class = 'error'
+    email = EmailField(label=_("Please, enter your e-mail for verification"), required=not settings.DEBUG)
+    
+    error_css_class = 'error'
+    
 
 class ProfileForm(ModelForm):
     class Meta:
