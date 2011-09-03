@@ -1,14 +1,15 @@
 import urlparse
 
 from django.views.generic.base import View, TemplateResponseMixin
-from django.views.generic.edit import FormView, BaseCreateView
+from django.views.generic.edit import FormView, BaseCreateView, BaseUpdateView
 from django.contrib.auth import login, logout, authenticate, REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.views.decorators.http import require_POST, require_http_methods
 
 from main.class_decorators import login_required, csrf_protect, never_cache, unauthorized_only
-from users.forms import AuthForm, RegisterUserForm
+from users.forms import AuthForm, RegisterUserForm, ProfileForm
+from users.models import Profile
 
 require_GET_POST = require_http_methods(['GET', 'POST'])
 
@@ -80,14 +81,35 @@ class Register(AuthMixin, TemplateResponseMixin, BaseCreateView):
     
     form_class = RegisterUserForm
     template_name = 'users/create.html'
-    success_url = '/users/register/thanks/'
+    success_url = '/thanks/'
     
-    def get_success_url():
-        return '%s?%s=%s' % \
-            (self.success_url, self.redirect_field_name, self.get_redirect_url,)
+    def get_success_url(self):
+        return '%s?%s=%s' % (
+            self.success_url,
+            self.redirect_field_name,
+            self.get_redirect_url(),
+        )
 
     def form_valid(self, form):
         res = super(Register, self).form_valid(form)
         self.object.backend = 'django.contrib.auth.backends.ModelBackend'
         login(self.request, self.object)
+        print str(self.object)
         return res
+    
+    
+class ProfileMixin(object):
+
+    def get_object(self):
+        return self.request.user.profile
+    
+
+class BaseProfileUpdateView(TemplateResponseMixin, ProfileMixin, BaseUpdateView):
+    
+    form_class = ProfileForm
+    
+
+@login_required
+class CompleteRegistration(AuthMixin, BaseProfileUpdateView):
+    
+    template_name = 'users/complete_registration.html'

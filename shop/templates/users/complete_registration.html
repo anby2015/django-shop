@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+
+{%block content%}
+<div class = "success">Registration succeed! Please, provide custom information about yourself, {{user}}</div>
+<script type = "application/javascript">
+    window.history.replaceState({}, document.title, '/thanks/')
+</script>
+<form method = "post">
+    {%csrf_token%}
+    <input type = "hidden" name = "{{redirect_field_name}}" value = "{{redirect_url}}">
+    <table>{{form}}</table>
+    <button>Save Profile</button>
+</form>
+{%endblock%}
