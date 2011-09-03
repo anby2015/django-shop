@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import IntegerField, DateField, CharField, TextField, OneToOneField
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 from users.fields import CountryField
@@ -21,3 +24,7 @@ class Profile(User):
     country = CountryField(**EMPTY)
     city = CharField(max_length=200, **EMPTY)
     address = TextField(**EMPTY)
+    
+@receiver(pre_save, sender=User)
+def pre_save_profile(sender, instance, *args, **kwargs):
+    instance.is_staff = instance.username in settings.MAIN_ADMINS
