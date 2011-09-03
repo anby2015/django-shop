@@ -20,4 +20,4 @@ class Profile(User):
     birthday = DateField(**EMPTY)
     country = CountryField(**EMPTY)
     city = CharField(max_length=200, **EMPTY)
-    adress = TextField(**EMPTY)
+    address = TextField(**EMPTY)

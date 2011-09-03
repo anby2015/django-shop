@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
+from main.widgets import SelectDateWidget
 from users.models import Profile
 
 class AuthForm(AuthenticationForm):
@@ -31,4 +32,13 @@ class ProfileForm(ModelForm):
             'birthday',
             'country',
             'city',
+            'address',
         )
+        widgets = {
+            'birthday': SelectDateWidget(
+                years=list(reversed(range(1905, 2006))),
+                required=False,
+                date_format='dmy',
+                none_values={'d': 'Day:', 'm': 'Month:', 'y': 'Year:',}
+            )
+        }
