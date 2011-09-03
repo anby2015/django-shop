@@ -3,6 +3,7 @@
 {%block content%}
 <form method = "post">
     {%csrf_token%}
+    <input type = "hidden" name = "{{redirect_field_name}}" value = "{{redirect_url}}">
     <table>{{form}}</table>
     <button>Register</button>
 </form>
