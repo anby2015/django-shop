@@ -22,7 +22,7 @@ def _parse_format(fmt):
     def pos(s):
         match = re.search('[' + s + ']', fmt)
         return match.start() + 1 if match else 0
-
+    
     dic = {'day': pos('dj'), 'month': pos('bEFMmNn'), 'year': pos('yY')}
     return sorted(filter(None, dic.keys()), key=dic.get)
 
@@ -34,7 +34,7 @@ def _parse_date_fmt():
 class SelectDateWidget(Widget):
     """
     A Widget that splits date input into three <select> boxes.
-
+    
     This also serves as an example of a Widget that has more than one HTML
     element and hence implements value_from_datadict.
     """
@@ -43,7 +43,7 @@ class SelectDateWidget(Widget):
     field_values = ['%s_' + n for n in names]
     fields = dict(zip(names, field_values))
     day_field, month_field, year_field = field_values
-
+    
     def __init__(self, attrs=None, years=None, required=True,
             date_format='', none_values=None):
         # years is an optional list/tuple of years
@@ -53,16 +53,15 @@ class SelectDateWidget(Widget):
         if not years:
             this_year = datetime.date.today().year
             years = range(this_year, this_year + 10)
-        print list(years)
         self.years = years
         self.date_format = _parse_format(date_format)
         self.none_values = none_values \
             or dict([(i, self.none_values_dafault) for i in 'dmy'])
-
+    
     def render(self, name, value, attrs=None):
 
         get_names_dict = lambda l: dict(zip(self.names, l))
-
+        
         try:
             values_list = [getattr(value, n) for n in self.names]
         except AttributeError:
@@ -80,23 +79,24 @@ class SelectDateWidget(Widget):
                     if match:
                         values_list = (int(v) for v in match.groups())
         values = get_names_dict(values_list)
-
+        
         choices = get_names_dict([
             [(i, i) for i in range(1, 32)],
             MONTHS.items(),
             [(i, i) for i in self.years],
         ])
-
+        
         create_select_short = lambda n: self.create_select(
             name, self.fields[n], value, values.get(n), choices[n], n
         )
-
+        
         htmls = get_names_dict([create_select_short(n) for n in self.names])
-
+        
         date_format = self.date_format or _parse_date_fmt()
         output = [htmls[field] for field in date_format]
         return mark_safe(u'\n'.join(output))
-
+    
+    @classmethod
     def id_for_label(cls, id_):
         field_list = _parse_date_fmt()
         if field_list:
@@ -104,8 +104,7 @@ class SelectDateWidget(Widget):
         else:
             first_select = 'month'
         return '%s_%s' % (id_, first_select)
-    id_for_label = classmethod(id_for_label)
-
+    
     def value_from_datadict(self, data, files, name):
         d, m, y = (data.get(self.fields[n] % name) for n in self.names)
         if y == m == d == "0":
@@ -121,7 +120,7 @@ class SelectDateWidget(Widget):
             return date_value.strftime(input_format)
         except ValueError:
             return '%s-%s-%s' % (y, m, d)
-
+    
     def create_select(self, name, field, value, val, choices, date_part='d'):
         if 'id' in self.attrs:
             id_ = self.attrs['id']
@@ -133,4 +132,3 @@ class SelectDateWidget(Widget):
         s = Select(choices=choices)
         select_html = s.render(field % name, val, local_attrs)
         return select_html
-

@@ -94,7 +94,6 @@ class Register(AuthMixin, TemplateResponseMixin, BaseCreateView):
         res = super(Register, self).form_valid(form)
         self.object.backend = 'django.contrib.auth.backends.ModelBackend'
         login(self.request, self.object)
-        print str(self.object)
         return res
     
     
