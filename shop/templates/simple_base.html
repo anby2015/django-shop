@@ -10,7 +10,7 @@
     
     <link rel="stylesheet" href="{{STATIC_URL}}css/shop.css" type="text/css">
 </head>
-<body>
+<body>{%block fullbody%}
 <div class = "container" class = "showgrid">
     <div id = "header" class = "span-24">
         <div id = "promo_header" class="span-{%block header_blueprint_size%}24{%endblock%}" class = "left large">
@@ -19,4 +19,4 @@
         {%block header_right%}{pretty colourful picture}{%endblock%}
     </div>
     <div class = "span-24">{%block body%}{%endblock%}</div>
-</body>
+{%endblock%}</body>
