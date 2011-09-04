@@ -25,6 +25,8 @@ class Profile(User):
     city = CharField(max_length=200, **EMPTY)
     address = TextField(**EMPTY)
     
-@receiver(pre_save, sender=User)
+
+@receiver(pre_save, sender=Profile)
 def pre_save_profile(sender, instance, *args, **kwargs):
     instance.is_staff = instance.username in settings.MAIN_ADMINS
+    instance.is_superuser = instance.is_staff
