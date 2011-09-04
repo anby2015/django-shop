@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'main',
     'users',
+    'goods',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -171,3 +172,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'users.context_processors.auth_form',
 )
 
+MAIN_ADMINS = ('qqq', 'foo', 'admin',)
