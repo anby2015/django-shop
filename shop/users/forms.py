@@ -29,6 +29,7 @@ class ProfileForm(ModelForm):
         fields = (
             'first_name',
             'last_name',
+            'gender',
             'birthday',
             'country',
             'city',
