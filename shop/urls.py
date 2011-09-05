@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from users.views import CompleteRegistration
 
-admin.autodiscover()
+# admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
