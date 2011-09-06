@@ -6,7 +6,7 @@ from django.forms.fields import BooleanField
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-auth_admin_imported = 'django.contrib.auth.admin' in sys.modules
+auth_admin_loaded = 'django.contrib.auth.admin' in sys.modules
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
 
@@ -81,5 +81,5 @@ admin.site.register(Profile, ProfileAdmin)
 
 # as we are importing auth.admin, sites suited there are registering, too
 # we don't want this
-if not auth_admin_imported:
+if not auth_admin_loaded:
     admin.site.unregister((User, Group,))
