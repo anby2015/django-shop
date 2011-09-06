@@ -8,7 +8,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 auth_admin_imported = 'django.contrib.auth.admin' in sys.modules
 from django.contrib.auth.admin import UserAdmin
-from from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group
 
 from main.widgets import SelectDateWidget
 from users.models import Profile
