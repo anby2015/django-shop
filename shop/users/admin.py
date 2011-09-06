@@ -1,9 +1,14 @@
+import sys
+
 from django.contrib import admin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.contrib.auth.admin import UserAdmin
 from django.forms.fields import BooleanField
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
+
+auth_admin_imported = 'django.contrib.auth.admin' in sys.modules
+from django.contrib.auth.admin import UserAdmin
+from from django.contrib.auth.models import User, Group
 
 from main.widgets import SelectDateWidget
 from users.models import Profile
@@ -73,3 +78,8 @@ class ProfileAdmin(UserAdmin):
     
 
 admin.site.register(Profile, ProfileAdmin)
+
+# as we are importing auth.admin, sites suited there are registering, too
+# we don't want this
+if not auth_admin_imported:
+    admin.site.unregister((User, Group,))
