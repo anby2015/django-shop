@@ -40,8 +40,8 @@ class AdmiProfileFormMixin(object):
             p.save()
         return p
 
-class AdminProfileChangeForm(AdmiProfileFormMixin, UserChangeForm):    
-    class Meta(UserChangeForm.Meta):
+class AdminProfileChangeForm(AdmiProfileFormMixin, UserChangeForm):
+    class Meta:
         model = Profile
         
     is_moderator = is_moderator_field()
