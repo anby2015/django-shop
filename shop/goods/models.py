@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Model, IntegerField, DateField, CharField, TextField, ForeignKey
 
+import users.models
+
 class Category(Model):
     name = CharField(max_length=50)
     
@@ -37,8 +39,9 @@ class Category(Model):
 
 class Product(Model):
     name = CharField(max_length=200)
-    description = TextField()
+    description = TextField(empty=True)
     category = ForeignKey(Category)
+    owner = ForeignKey(users.models.Profile)
     
 
 def get_category_roots():
