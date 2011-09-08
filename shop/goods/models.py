@@ -30,6 +30,9 @@ class Category(Model):
     def get_dhildren(self, queryset=None):
         q = queryset or Category.objects.all()
         return q.filter(inheritance=self.as_parent())
+       
+    def as_slug(self):
+        return str(self.pk)
     
 
 class Product(Model):
