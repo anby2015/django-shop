@@ -11,6 +11,6 @@ def index(request, page=1):
     context = {
         'in_root': True,
         'categories': get_category_roots(),
-        'latest_products': get_page(Product.objects.order_by('-date'), page)
+        'products': get_page(Product.objects.order_by('-date'), page)
     }
     return render(request, 'index.html', context)
