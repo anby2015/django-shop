@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Model, IntegerField, DateField, CharField, TextField, ForeignKey
+from django.db.models import Model, IntegerField, DateTimeField, CharField, TextField, ForeignKey
 
 import users.models
 
@@ -43,6 +43,8 @@ class Product(Model):
     description = TextField(empty=True)
     category = ForeignKey(Category)
     owner = ForeignKey(users.models.Profile)
+    date = DateTimeField(auto_now_add=True)
+    last_modified = DateTimeField(auto_now=True)
     
 
 def get_category_roots():
