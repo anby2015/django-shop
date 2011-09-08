@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate, REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.views.decorators.http import require_POST, require_http_methods
+from django.shortcuts import render
 
 from main.class_decorators import login_required, csrf_protect, never_cache, unauthorized_only
 from users.forms import AuthForm, RegisterUserForm, ProfileForm
@@ -68,6 +69,11 @@ class Login(AuthMixin, FormView):
 
 @login_required
 class Logout(View):
+    
+    def get(self, request):
+        # user typed '/logout/' into browser address bar
+        # we want to know, if he is sure he wants to logout to prevent csrf
+        return render(request, 'users/logout.html', {})
     
     def post(self, request):
         logout(request)
