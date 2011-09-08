@@ -5,6 +5,7 @@ import users.models
 
 class Category(Model):
     name = CharField(max_length=50)
+    slug = CharField(max_length=50) # validate as /[\w.-]*/
     
     # validate `inheritance` as /|\d+(\.\d+)*/
     # if it is empty, then the category is root
