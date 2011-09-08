@@ -17,6 +17,11 @@ class Category(Model):
     def get_parents_line(self, queryset=None):
         q = queryset or Category.objects.all()
         return q.filter(pk__in=inheritance.split('.'))
+    
+    def get_dhildren(self, queryset=None):
+        q = queryset or Category.objects.all()
+        return q.filter(inheritance__regexp=self.inheritance + r'\.\d+')
+    
 
 class Product(Model):
     name = CharField(max_length=200)
