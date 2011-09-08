@@ -1,5 +1,4 @@
-from django.db import models
-from django.db.models import Model, IntegerField, DateTimeField, CharField, TextField, ForeignKey
+from django.db.models import Model, DecimalField, DateTimeField, CharField, TextField, ForeignKey
 
 import users.models
 
@@ -41,6 +40,7 @@ class Category(Model):
 class Product(Model):
     name = CharField(max_length=200)
     description = TextField(empty=True)
+    cost = DecimalField(max_digits=7, decimal_places=2)
     category = ForeignKey(Category)
     owner = ForeignKey(users.models.Profile)
     date = DateTimeField(auto_now_add=True)
