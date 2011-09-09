@@ -32,6 +32,10 @@ class Category(Model):
     def get_children(self, queryset=None):
         q = queryset or Category.objects.all()
         return q.filter(inheritance=self.as_parent())
+    
+    def get_subchildren(self, queryset=None):
+        q = queryset or Category.objects.all()
+        return q.filter(inheritance__startswith=self.as_parent())
        
     def as_url(self):
         return self.slug or 'id_%d' % self.pk
