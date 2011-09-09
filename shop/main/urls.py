@@ -5,5 +5,5 @@ from main.views import Home
 
 urlpatterns = patterns('',
     url(r'^$', Home.as_view(), {'page': 1}),
-    url(r'^(?P<page>\d+)/$', Home.as_view()),
+    url(r'^(?P<page>\d+|last)/$', Home.as_view()),
 )
