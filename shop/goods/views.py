@@ -1,5 +1,6 @@
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.list import BaseListView
+from django.views.generic.detail import BaseDetailView
 
 from goods.models import Product, Category
 
@@ -57,3 +58,11 @@ class CategoryView(BaseCategoryView):
             'category': self.get_category()
         })
         return context
+    
+class ProductView(TemplateResponseMixin, BaseDetailView):
+    
+    model = Product
+    template_name = 'goods/product.html'
+    
+    def get_context_data(self, **kwargs):
+        return {'product': self.object,}
