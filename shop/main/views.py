@@ -1,6 +1,6 @@
-from goods.views import BaseProductView
+from goods.views import BaseCategoryView
 
-class Home(BaseProductView):
+class Home(BaseCategoryView):
     
     template_name = 'index.html'
     url = '/home/'

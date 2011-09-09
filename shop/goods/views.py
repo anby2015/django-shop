@@ -5,14 +5,14 @@ from goods.models import Product, Category
 
 PAGINATE_BY = 24
 
-class BaseProductView(TemplateResponseMixin, BaseListView):
+class BaseCategoryView(TemplateResponseMixin, BaseListView):
     
     paginate_by = PAGINATE_BY
     category = None
     url = None
     
     def get_context_data(self, **kwargs):
-        context = super(BaseProductView, self).get_context_data(**kwargs)
+        context = super(BaseCategoryView, self).get_context_data(**kwargs)
         context.update({
             'products': context['object_list'],
             'url': self.get_url(),
@@ -44,9 +44,16 @@ class BaseProductView(TemplateResponseMixin, BaseListView):
             self.url = self.generate_url()
         return self.url
 
-class ProductView(BaseProductView):
+class CategoryView(BaseCategoryView):
     
     template_name = 'goods/categories.html'
     
     def generate_url(self):
-        return 'category/%s/' % self.get_category().as_url()
+        return '/categories/%s/' % self.get_category().as_url()
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+        context.update({
+            'category': self.get_category()
+        })
+        return context
