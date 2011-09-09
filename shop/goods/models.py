@@ -4,7 +4,7 @@ import users.models
 
 class Category(Model):
     name = CharField(max_length=50)
-    slug = CharField(max_length=50) # validate as /[\w.-]*/
+    slug = CharField(max_length=50, unique=True) # validate as /[\w.-]*/
     
     # validate `inheritance` as /|\d+(\.\d+)*/
     # if it is empty, then the category is root
@@ -16,7 +16,7 @@ class Category(Model):
         return '%s.%d' % (inheritance, pk) if inheritance else str(pk)
     
     def set_parent(self, c, save=False):
-        self.inheritance = c.as_parent()
+        self.inheritance = c.as_parent() if c is not None else ''
         if save:
             self.save()
     
@@ -36,10 +36,13 @@ class Category(Model):
     def as_slug(self):
         return str(self.pk)
     
+    def __unicode__(self):
+        return self.name
+        
 
 class Product(Model):
     name = CharField(max_length=200)
-    description = TextField(empty=True)
+    description = TextField(blank=True)
     cost = DecimalField(max_digits=7, decimal_places=2)
     category = ForeignKey(Category)
     owner = ForeignKey(users.models.Profile)
@@ -49,3 +52,21 @@ class Product(Model):
 
 def get_category_roots():
     return Category.objects.filter(inheritance='')
+    
+from django.contrib.admin import site, ModelAdmin
+from django.forms.models import ModelForm, ModelChoiceField
+class CategoryForm(ModelForm):
+    class Meta:
+        fields = ('name', 'slug',)
+        Model = Category
+    parent = ModelChoiceField(queryset=Category.objects.all(), required=False)
+    def save(self, commit=False, *args, **kwargs):
+        obj = super(CategoryForm, self).save(commit=    False, *args, **kwargs)
+        obj.set_parent(self.cleaned_data['parent'])
+        if commit:
+            obj.save()
+        return obj
+class CategoryAdmin(ModelAdmin):
+    form = CategoryForm
+site.register(Category, CategoryAdmin)
+site.register(Product)
