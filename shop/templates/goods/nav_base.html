@@ -1,23 +1,5 @@
 {%extends "base.html"%}
 
-{%block left_col%}
-    {%block left_col_top%}{%endblock%}
-    {%for c in root_categories%}
-    <div class = "category">
-        <a href = "/categories/{{c.as_url}}">{{c.name}}</a>
-    </div>
-    {%endfor%}
-    {%block left_col_admin%}
-        {% if user.is_staff%}
-        <hr>
-        <div id = "nav_admin">
-            <a href = "/admin/">Administration</a>
-        </div>
-        {%endif%}
-    {%endblock%}
-    {%block left_col_bottom%}{%endblock%}
-{%endblock%}
-
 {%block content%}
     {%block content_top%}{%endblock%}
     <div class = "top paginator">{%include "i_paginator.html"%}</div>
