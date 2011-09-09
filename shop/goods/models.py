@@ -29,7 +29,7 @@ class Category(Model):
         q = queryset or Category.objects.all()
         return q.filter(pk__in=inheritance.split('.'))
     
-    def get_dhildren(self, queryset=None):
+    def get_children(self, queryset=None):
         q = queryset or Category.objects.all()
         return q.filter(inheritance=self.as_parent())
        
