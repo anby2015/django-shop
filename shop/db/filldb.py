@@ -17,7 +17,7 @@ for l in flist:
     i+=1
     print i
     rating, name, url = l.split('||||')
-    desc, imgurl, genre = fdesc.readline().split('||||')
+    desc, imgurl, genre = fdesc.readline().strip().split('||||')
     
     cat, created = Category.objects.get_or_create(slug=genre.lower(), defaults={
         'name': genre,
