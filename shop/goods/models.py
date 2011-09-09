@@ -33,8 +33,8 @@ class Category(Model):
         q = queryset or Category.objects.all()
         return q.filter(inheritance=self.as_parent())
        
-    def as_slug(self):
-        return str(self.pk)
+    def as_url(self):
+        return self.slug or 'id_%d' % self.pk
     
     def __unicode__(self):
         return self.name
