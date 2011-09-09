@@ -1,4 +1,4 @@
-from djnago.shortcuts import render
+from django.shortcuts import render
 
 from goods.models import Category, Product, get_category_roots
 
