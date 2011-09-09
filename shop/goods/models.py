@@ -27,7 +27,8 @@ class Category(Model):
     
     def get_parents_line(self, queryset=None):
         q = queryset or Category.objects.all()
-        return q.filter(pk__in=inheritance.split('.'))
+        items = self.inheritance and self.inheritance.split('.')
+        return q.filter(pk__in=items)
     
     def get_children(self, queryset=None):
         q = queryset or Category.objects.all()
