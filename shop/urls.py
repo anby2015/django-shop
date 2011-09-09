@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 
 from users.views import CompleteRegistration
 
@@ -15,7 +17,15 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', include('main.urls')),
+    
+    url(r'^$', RedirectView.as_view(url='/home/')),
+    url(r'^home/', include('main.urls')),
+        
     url(r'^users/', include('users.urls')),
     url(r'^thanks/', CompleteRegistration.as_view()),
+    
+    url(
+        r'^media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}
+    ),
 )

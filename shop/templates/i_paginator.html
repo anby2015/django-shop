@@ -1,0 +1,16 @@
+{%if is_paginated%}
+    
+    <a{%if page_obj.has_previous%} href = "{{url}}1/"{%endif%}>|&lt;</a>
+    <a{%if page_obj.has_previous%} href = "{{url}}{{page_obj.previous_page_number}}"{%endif%}>&lt;</a>
+    
+    {%for p in paginator.page_range%}
+        {% if p == page_obj.number%}
+        <span>{{p}}</span>
+        {%else%}
+        <a href = "{{url}}{{p}}/">{{p}}</a>
+        {%endif%}
+    {%endfor%}
+    
+    <a{%if page_obj.has_next%} href = "{{url}}{{page_obj.next_page_number}}"{%endif%}>&gt;</a>
+    <a{%if page_obj.has_next%} href = "{{url}}last/"{%endif%}>&gt;|</a>
+{%endif%}
