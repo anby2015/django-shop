@@ -1,3 +1,18 @@
 {%extends "goods/nav_base.html"%}
 
-
+{%block content_top%}
+<div class = "navigation" id = "top_navigation">
+    <a href = "/home">Home</a>
+    {%for p in category.get_parents_line%}
+    -><a href = "/categories/{{p.as_url}}/">{{p}}</a>
+    {%endfor%}
+    -><a href = "/categories/{{category.as_url}}">{{category}}</a>
+    &nbsp;<=== You're here!
+</div>
+<div class = "child_list" id = "top_child_list">
+    {%if category.get_children%}|{%endif%}
+    {%for c in category.get_children%}
+    <a href = "/categories/{{c.as_url}}/">{{c}}</a>|
+    {%endfor%}
+</div>
+{%endblock%}
