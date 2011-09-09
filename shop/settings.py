@@ -170,6 +170,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #    'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'users.context_processors.auth_form',
+    'goods.context_processors.get_category_roots',
 )
 
 MAIN_ADMINS = ('qqq', 'foo', 'admin',)
