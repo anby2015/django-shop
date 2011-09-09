@@ -4,7 +4,7 @@
     {%block left_col_top%}{%endblock%}
     {%for c in root_categories%}
     <div class = "category">
-        <a href = "{{c.as_slug}}">{{c.name}}</a>
+        <a href = "/categories/{{c.as_url}}">{{c.name}}</a>
     </div>
     {%endfor%}
     {%block left_col_admin%}

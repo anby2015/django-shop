@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.views.generic.base import RedirectView
 
 from users.views import CompleteRegistration
+from goods.urls import category_patterns
 
 # admin.autodiscover()
 
@@ -20,6 +21,8 @@ urlpatterns = patterns('',
     
     url(r'^$', RedirectView.as_view(url='/home/')),
     url(r'^home/', include('main.urls')),
+    
+    url(r'^categories/', include(category_patterns)),
         
     url(r'^users/', include('users.urls')),
     url(r'^thanks/', CompleteRegistration.as_view()),
