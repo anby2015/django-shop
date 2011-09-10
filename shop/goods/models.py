@@ -58,6 +58,13 @@ class Product(Model):
 def get_category_roots():
     return Category.objects.filter(inheritance='')
     
+def get_category_leafs():
+    return Category.objects.filter(pk__gt=3).extra(where=['''
+        ((SELECT COUNT(*) FROM goods_category gc WHERE
+        goods_category.inheritance || '.' || goods_category.id = gc.inheritance
+        or (goods_category.inheritance = '' and goods_category.id = gc.inheritance)
+        )=0)'''])
+    
 from django.contrib.admin import site, ModelAdmin
 from django.forms.models import ModelForm, ModelChoiceField
 class CategoryForm(ModelForm):
