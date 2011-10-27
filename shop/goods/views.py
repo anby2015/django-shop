@@ -70,7 +70,10 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
         product = self.kwargs['pk'];
         return {
             'product': self.object,
-            'comments': Comment.objects.filter(owner=self.request.user, product__id=product).order_by('time'),
+            'comments': Comment.objects.filter(
+                owner=self.request.user.profile,
+                product__id=product
+            ).order_by('time'),
         }
 
 
@@ -81,6 +84,10 @@ class AddCommentView(View):
     def post(self, request, product_id):
         text = request.POST.get('text')
         if text:
-            Comment.objects.create(owner=self.request.user, product_id=product_id, text=text)
+            Comment.objects.create(
+                owner=self.request.user.profile,
+                product_id=product_id,
+                text=text
+            )
 
         return HttpResponseRedirect('../')

@@ -68,7 +68,7 @@ def get_category_leafs():
 
 class Comment(Model):
     product = ForeignKey(Product)
-    parent = ForeignKey('self')
+    parent = ForeignKey('self', default=0)
     owner = ForeignKey(users.models.Profile)
     text = TextField()
     time = DateTimeField(auto_now_add=True)
