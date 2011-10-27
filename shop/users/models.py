@@ -16,7 +16,7 @@ GENDER_CHOICES = (
 EMPTY = {'null': True, 'blank': True}
 
 class Profile(User):
-    # p.user is much trettier then p.user_ptr
+    # p.user is much prettier then p.user_ptr
     user = OneToOneField(User, parent_link=True)
     
     gender = IntegerField(choices=GENDER_CHOICES, default=0, **EMPTY)

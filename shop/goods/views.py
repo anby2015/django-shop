@@ -1,8 +1,10 @@
-from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.base import View, TemplateResponseMixin
 from django.views.generic.list import BaseListView
 from django.views.generic.detail import BaseDetailView
+from django.http import HttpResponseRedirect
 
-from goods.models import Product, Category
+from goods.models import Product, Category, Comment
+from main.class_decorators import login_required
 
 PAGINATE_BY = 24
 
@@ -65,4 +67,20 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
     template_name = 'goods/product.html'
     
     def get_context_data(self, **kwargs):
-        return {'product': self.object,}
+        product = self.kwargs['pk'];
+        return {
+            'product': self.object,
+            'comments': Comment.objects.filter(owner=self.request.user, product__id=product).order_by('time'),
+        }
+
+
+@login_required
+class AddCommentView(View):
+    http_method_names = ['post']
+
+    def post(self, request, product_id):
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(owner=self.request.user, product_id=product_id, text=text)
+
+        return HttpResponseRedirect('../')

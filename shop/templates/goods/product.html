@@ -16,4 +16,26 @@
         <div class = "description">Description:<br>{{product.description}}</div>
     </span>
 </div>
+<hr>
+    {%block comments%}
+<div class = "comments">
+        {%for c in comments%}
+    <div class = "comment">
+        <div class = "header">
+            by <span><strong>{{c.owner}}</strong></span>
+            at <span class = "date">{{c.time}}</span>
+        </div>
+        {{c.text}}
+    </div>
+        {%endfor%}
+</div>
+<hr>
+<div class = "add_comment">
+    <form action = "add_comment/" method = "post">
+        {%csrf_token%}
+        <textarea name = "text"></textarea>
+        <button>Add comment</button>
+    </form>
+</div>
+    {%endblock%}
 {%endblock%}

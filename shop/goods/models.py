@@ -64,7 +64,16 @@ def get_category_leafs():
         goods_category.inheritance || '.' || goods_category.id = gc.inheritance
         or (goods_category.inheritance = '' and goods_category.id = gc.inheritance)
         )=0)'''])
-    
+
+
+class Comment(Model):
+    product = ForeignKey(Product)
+    parent = ForeignKey('self')
+    owner = ForeignKey(users.models.Profile)
+    text = TextField()
+    time = DateTimeField(auto_now_add=True)
+
+
 from django.contrib.admin import site, ModelAdmin
 from django.forms.models import ModelForm, ModelChoiceField
 class CategoryForm(ModelForm):
