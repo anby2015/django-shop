@@ -79,7 +79,7 @@ class ProfileAdmin(UserAdmin):
 
 admin.site.register(Profile, ProfileAdmin)
 
-# as we are importing auth.admin, sites suited there are registering, too
+# as we are importing auth.admin, sites located there are registering, too
 # we don't want this
 if not auth_admin_loaded:
     admin.site.unregister((User, Group,))
