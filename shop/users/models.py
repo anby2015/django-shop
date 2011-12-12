@@ -24,6 +24,9 @@ class Profile(User):
     country = CountryField(**EMPTY)
     city = CharField(max_length=200, **EMPTY)
     address = TextField(**EMPTY)
+
+    def get_full_address(self):
+        return '%s, %s, %s' % (self.address, self.city, self.country,)
     
 
 @receiver(pre_save, sender=Profile)
