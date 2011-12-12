@@ -2,7 +2,9 @@
 {%block header_blueprint_size%}15{%endblock%}
 {%block header_right%}
 <div class = "span-3">
-    {% if user.is_authenticated %}Hello, {{user}}{%else%}Welcome, guest{%endif%}!
+        {% if user.is_authenticated %}
+        Hello, {{user}}!<br><a href = "/cart/">Manage your cart</a>
+        {%else%}Welcome, guest!{%endif%}
 </div>
 <div id = "top_userbar" class = "span-5 last right top">
 {% if user.is_authenticated %}

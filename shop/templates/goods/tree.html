@@ -1,0 +1,10 @@
+{%extends "base.html"%}
+
+{%block content%}
+<div id = "category_tree">
+	{%for i in objects%}
+		<div>{%for j in i.nesting%}&nbsp;&nbsp;&nbsp;{%endfor%}
+		<a href = "{{i.category.as_url}}">{{i.category.name}}</a></div>
+	{%endfor%}
+</div>
+{%endblock%}

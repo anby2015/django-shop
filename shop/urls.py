@@ -5,6 +5,7 @@ from django.views.generic.base import RedirectView
 
 from users.views import CompleteRegistration
 from goods.urls import category_patterns, products_patterns
+from goods.views import FullTreeView
 
 # admin.autodiscover()
 
@@ -27,6 +28,10 @@ urlpatterns = patterns('',
         
     url(r'^users/', include('users.urls')),
     url(r'^thanks/', CompleteRegistration.as_view()),
+
+    url(r'^/cart/', include('cart.urls')),
+
+    url(r'^tree/$', FullTreeView.as_view()),
     
     url(
         r'^media/(?P<path>.*)$', 'django.views.static.serve',

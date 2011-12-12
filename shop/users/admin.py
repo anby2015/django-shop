@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms.fields import BooleanField
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.contrib.auth.models import Permission
 
 auth_admin_loaded = 'django.contrib.auth.admin' in sys.modules
 from django.contrib.auth.admin import UserAdmin
@@ -13,12 +14,12 @@ from django.contrib.auth.models import User, Group
 from main.widgets import SelectDateWidget
 from users.models import Profile
 from users.forms import ProfileForm
-    
-MODERATOR_PERMISSIONS = [
-    'users.change_profile',
-    'users.delete_profile',
-    'users.add_profile'
-]
+
+MODERATOR_PERMISSIONS = [Permission.objects.get_by_natural_key(p, 'users', 'profile') for p in [
+    'change_profile',
+    'delete_profile',
+    'add_profile',
+]]
 
 is_moderator_field = lambda: BooleanField(
     required=False,

@@ -1,7 +1,8 @@
-from django.views.generic.base import View, TemplateResponseMixin
+from django.views.generic.base import View, TemplateResponseMixin, TemplateView
 from django.views.generic.list import BaseListView
 from django.views.generic.detail import BaseDetailView
 from django.http import HttpResponseRedirect
+from django.db.models import F
 
 from goods.models import Product, Category, Comment
 from main.class_decorators import login_required
@@ -13,7 +14,7 @@ class BaseCategoryView(TemplateResponseMixin, BaseListView):
     paginate_by = PAGINATE_BY
     category = None
     url = None
-    
+
     def get_context_data(self, **kwargs):
         context = super(BaseCategoryView, self).get_context_data(**kwargs)
         context.update({
@@ -67,11 +68,10 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
     template_name = 'goods/product.html'
     
     def get_context_data(self, **kwargs):
-        product = self.kwargs['pk'];
+        product = self.kwargs['pk']
         return {
             'product': self.object,
             'comments': Comment.objects.filter(
-                owner=self.request.user.profile,
                 product__id=product
             ).order_by('time'),
         }
@@ -91,3 +91,17 @@ class AddCommentView(View):
             )
 
         return HttpResponseRedirect('../')
+
+class FullTreeView(TemplateView):
+    template_name = 'goods/tree.html'
+
+    def get_context_data(self, **kwargs):
+        l = list(Category.objects.extra(
+            select={'ord': 
+                r"case inheritance when '' then ''"
+                r" else inheritance || '.' end || id || '.'"
+            },
+            order_by=['ord',],
+        ))
+        objects = [{'category': i, 'nesting': range(0, i.depth())} for i in l]
+        return {'objects': objects}
