@@ -1,0 +1,9 @@
+{%extends "base.html"%}
+
+{%block content%}
+{%if products%}
+    {%for p in products.all%}
+    {{p.product.name}}:{{p.count}}
+    {%endfor%}
+{%else%}Your cart is empty{%endif%}
+{%endblock%}

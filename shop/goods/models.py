@@ -2,6 +2,7 @@ import re
 
 from django.db.models import Model, DecimalField, DateTimeField, CharField, TextField, ForeignKey
 from django.core.validators import RegexValidator
+from treebeard.ns_tree import NS_Node
 
 import users.models
 
@@ -84,12 +85,16 @@ def get_category_leafs():
         )=0)'''])
 
 
-class Comment(Model):
+class Comment(NS_Node):
     product = ForeignKey(Product)
-    parent = ForeignKey('self', default=0)
     owner = ForeignKey(users.models.Profile)
     text = TextField()
     time = DateTimeField(auto_now_add=True)
+
+    node_order_by = ['time']
+
+    def iter_depth(self):
+        return range(0, self.get_depth())
 
 
 from django.contrib.admin import site, ModelAdmin

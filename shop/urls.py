@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^users/', include('users.urls')),
     url(r'^thanks/', CompleteRegistration.as_view()),
 
-    url(r'^/cart/', include('cart.urls')),
+    url(r'^cart/', include('cart.urls')),
 
     url(r'^tree/$', FullTreeView.as_view()),
     

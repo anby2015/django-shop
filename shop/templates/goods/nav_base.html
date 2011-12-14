@@ -12,6 +12,14 @@
                 <div>{{p.name}}</div>
             </a>
             <p>Cost: {{p.cost}} <b>&euro;</b></p>
+            {%if user.is_authenticated%}
+                <form action = "/cart/add/" method = "post">
+                    {%csrf_token%}
+                    <input style = "width: 50px;" type = "text" name = "count" value = "1">
+                    <button>Add</button>
+                    <input type = "hidden" name = "product_id" value = "{{p.pk}}">
+                </form>
+            {%endif%}
         </span>
     {%endfor%}
     </div>

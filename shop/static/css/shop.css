@@ -46,3 +46,36 @@
     min-height: 117px;
     display: block;
 }
+
+.comments .wrap{
+    padding-left: 15px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: 4px auto;
+    background-position: left 10px;
+}
+
+.comments .wrap:hover{
+    background-image: url(/static/images/folding-dot-light.png);
+}
+
+input[type=radio][name=answer_to]{
+    vertical-align: top;
+}
+
+.comments input[type=radio][name=answer_to]{
+    visibility: hidden;
+    margin-top: 7px;
+}
+
+.comment:hover input[type=radio][name=answer_to],
+.comment input[type=radio][name=answer_to]:checked{
+    visibility: visible;
+}
+
+.comment-content{
+    background-color: white;
+}
+.comment-text{
+    white-space: pre-line;
+}

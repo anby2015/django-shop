@@ -1,3 +1,5 @@
+import datetime
+
 from django.views.generic.base import View, TemplateResponseMixin, TemplateView
 from django.views.generic.list import BaseListView
 from django.views.generic.detail import BaseDetailView
@@ -8,6 +10,17 @@ from goods.models import Product, Category, Comment
 from main.class_decorators import login_required
 
 PAGINATE_BY = 24
+
+class PostAndReturnView(View):
+    redirect_url = 'redirect_to'
+
+    def post(self, request):
+        self.request = request
+        try:
+            result = self.make_changes()
+        finally:
+            return HttpResponseRedirect(get_redirect_url(request, self.redirect_url))
+
 
 class BaseCategoryView(TemplateResponseMixin, BaseListView):
     
@@ -71,9 +84,9 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
         product = self.kwargs['pk']
         return {
             'product': self.object,
-            'comments': Comment.objects.filter(
+            'comments': Comment.get_tree().filter(
                 product__id=product
-            ).order_by('time'),
+            ),
         }
 
 
@@ -84,10 +97,17 @@ class AddCommentView(View):
     def post(self, request, product_id):
         text = request.POST.get('text')
         if text:
-            Comment.objects.create(
+            answer_to = request.POST.get('answer_to')
+            if answer_to:
+                parent = Comment.objects.get(pk=answer_to)
+                create_comment = parent.add_child
+            else:
+                create_comment = Comment.add_root
+            create_comment(
                 owner=self.request.user.profile,
                 product_id=product_id,
-                text=text
+                text=text,
+                time=datetime.datetime.now(),
             )
 
         return HttpResponseRedirect('../')
