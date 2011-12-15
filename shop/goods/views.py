@@ -21,8 +21,7 @@ class PostAndReturnView(View):
             result = self.make_changes()
         except Exception as e:
             print "BEEEEEEEEEEEEEEEEEEP!" + str(e)
-            return HttpResponseRedirect(get_redirect_url(request, self.redirect_url))
-        else:
+        finally:
             return HttpResponseRedirect(get_redirect_url(request, self.redirect_url))
 
 
@@ -86,12 +85,19 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
     
     def get_context_data(self, **kwargs):
         product = self.kwargs['pk']
-        return {
+        c = {
             'product': self.object,
             'comments': Comment.get_tree().filter(
                 product__id=product
             ),
         }
+        last = self.object.comment_set.filter(
+            owner=self.request.user,
+            time__gt=datetime.datetime.now() - datetime.timedelta(seconds=3)
+        )
+        if last:
+            c['just_added'] = last[0]
+        return c
 
 
 @login_required
