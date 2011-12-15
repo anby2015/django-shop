@@ -28,7 +28,7 @@ class Cart(Storage):
         with transaction.commit_on_success():
             o = Order.objects.create(
                 assignee=a,
-                products=self.products,
                 address=address,
             )
-            self.delete()
+            StorageItem.objects.filter(storage=self).update(storage=o)
+        self.delete()
