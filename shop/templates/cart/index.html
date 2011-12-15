@@ -2,8 +2,29 @@
 
 {%block content%}
 {%if products%}
-    {%for p in products.all%}
-    {{p.product.name}}:{{p.count}}
-    {%endfor%}
+<div class = "span-24">
+    <table class = "cart span-16" style = "table-layout:fixed;">
+        {%for p in products.all%}
+        <tr>
+            <td>{{p.product.name}}</td>
+            <td><input name = "count" type = "text" value = "{{p.count}}" form = "update_form_{{p.pk}}"></td>
+            <td><form action = "/cart/set/" method = "post" id = "update_form_{{p.pk}}">
+                {%csrf_token%}
+                <input type = "hidden" name = "product_id" value = "{{p.product.pk}}">
+                <input type = "submit" value = "Update">
+            </form></td>
+            <td><form action = "/cart/remove/" method = "post">
+                {%csrf_token%}
+                <input type = "hidden" name = "product_id" value = "{{p.product.pk}}">
+                <input type = "submit" value = "Delete">
+            </form></td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+<form id = "order_form" action = "/cart/order/" method = "post">
+    {%csrf_token%}
+    <div><button>Order</button></div>
+</form>
 {%else%}Your cart is empty{%endif%}
 {%endblock%}
