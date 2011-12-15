@@ -84,7 +84,41 @@ input[type=radio][name=answer_to]{
 
 .comment-content{
     background-color: white;
+    max-width: 700px;
 }
 .comment-text{
     white-space: pre-line;
+    word-wrap: break-word;
+}
+
+.answer_form{
+    display: none;
+}
+
+.comments .comment form{
+    padding-bottom: 30px;
+}
+
+.comments .comment textarea{
+    width: 400px;
+    display: block;
+    height: 50px;
+}
+
+.before_form{
+    position:fixed;
+    width:20px;
+    left:0;
+    top:0;
+}
+
+.comments .before_form:target{
+    display: block;
+}
+.comments .before_form:target + div > form{
+    display: block;
+}
+
+.comment-content.just_added{
+    background-color: lightBlue;
 }

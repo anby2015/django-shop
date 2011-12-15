@@ -18,16 +18,14 @@
 </div>
 <hr>
     {%block comments%}
-    <form action = "add_comment/" method = "post">
         <div class = "comments">
             {%for c in comments%}
             <div class = "comment" id = "comment{{c.pk}}">
-                <input type = "radio" name = "answer_to" value = "{{c.pk}}">
                 
                 {%for i in c.iter_depth%}
                 <span class = "wrap">
                 {%endfor%}
-                    <div class = "comment-content">
+                    <div class = "comment-content{%if c == just_added%} just_added{%endif%}">
                         <span class = "header">
                             by <em><strong>{{c.owner}}</strong></em>
                             at {{c.time}}
@@ -36,20 +34,31 @@
                         </span><br>
                         <div class = "comment-text">{{c.text}}</div>
                     </div>
+                    <a href = "#ans_{{c.pk}}">Answer</a>
+                    <div class = "before_form" id = "ans_{{c.pk}}"></div>
+                    <div>
+                        <form class = "answer_form" action = "add_comment/" method = "post">
+                            {%csrf_token%}
+                            <input type = "hidden" name = "answer_to" value = "{{c.pk}}">
+                            <textarea name = "text"></textarea>
+                            <button>Answer</button>
+                        </form>
+                    </div>
                 {%for i in c.iter_depth%}
                 </span>
                 {%endfor%}
+                
             </div>
             {%endfor%}
         </div>
         <hr>
         <div class = "add_comment">
-            {%csrf_token%}
-            <input type = "radio" name = "answer_to" value = "0" checked>
-            <!--<input type = "text" name = "answer_to">-->
-            <textarea name = "text"></textarea>
-            <button>Add comment</button>
+            <form id = "add_comment_form" action = "add_comment/" method = "post">
+                {%csrf_token%}
+                <!--<input type = "text" name = "answer_to">-->
+                <textarea name = "text"></textarea>
+                <button>Add comment</button>
+            </form>
         </div>
-    </form>
     {%endblock%}
 {%endblock%}
