@@ -8,6 +8,7 @@ from django.db.models import F
 
 from goods.models import Product, Category, Comment
 from main.class_decorators import login_required
+from users.views import get_redirect_url
 
 PAGINATE_BY = 24
 
@@ -18,7 +19,10 @@ class PostAndReturnView(View):
         self.request = request
         try:
             result = self.make_changes()
-        finally:
+        except Exception as e:
+            print "BEEEEEEEEEEEEEEEEEEP!" + str(e)
+            return HttpResponseRedirect(get_redirect_url(request, self.redirect_url))
+        else:
             return HttpResponseRedirect(get_redirect_url(request, self.redirect_url))
 
 

@@ -5,7 +5,6 @@ from cart.models import Cart, StorageItem
 from goods.models import Product
 from goods.views import PostAndReturnView
 from main.class_decorators import login_required
-from users.views import get_redirect_url
 
 def get_storage(user, product_id):
 	cart, created = Cart.objects.get_or_create(assignee=user.profile)
@@ -54,3 +53,9 @@ class CartView(TemplateView):
 			ctx['products'] = cart.storageitem_set
 		finally:
 			return ctx
+
+@login_required
+class CartOrderView(PostAndReturnView):
+	def make_changes(self):
+		cart = Cart.objects.get(assignee=self.request.user.profile)
+		cart.order()
