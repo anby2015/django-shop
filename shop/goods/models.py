@@ -66,7 +66,7 @@ class Category(Model):
         return self.name
         
 
-class Product(Model):
+class Product(moderation.models.VotingObject):
     name = CharField(max_length=200)
     description = TextField(blank=True)
     cost = DecimalField(max_digits=7, decimal_places=2)
@@ -74,6 +74,18 @@ class Product(Model):
     owner = ForeignKey(users.models.Profile)
     date = DateTimeField(auto_now_add=True)
     last_modified = DateTimeField(auto_now=True)
+
+    def is_shadowed(self):
+        return self.mark <= 2.5
+
+    def is_hidden(self):
+        return self.mark <= 1.5
+
+    def get_high_mark(self):
+        return 5
+
+    def get_low_mark(self):
+        return 1
     
 
 def get_category_roots():
