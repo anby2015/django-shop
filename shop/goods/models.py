@@ -5,6 +5,8 @@ from django.core.validators import RegexValidator
 from treebeard.ns_tree import NS_Node
 
 import users.models
+import moderation.models
+from settings import DEBUG
 
 validate_category_slug = RegexValidator(re.compile(r'^[\w.-]+$'), u"Enter a valid 'slug' consisting of letters, numbers, underscores, hyphens or dots.", 'invalid')
 validate_category_inheritance = RegexValidator(re.compile(r'^(\d+(.\d+)*)?$'), 'BLABLA MAKE ME RIGHT', 'invalid')
@@ -84,8 +86,7 @@ def get_category_leafs():
         or (goods_category.inheritance = '' and goods_category.id = gc.inheritance)
         )=0)'''])
 
-
-class Comment(NS_Node):
+class Comment(NS_Node, moderation.models.VotingObject):
     product = ForeignKey(Product)
     owner = ForeignKey(users.models.Profile)
     text = TextField()
@@ -95,6 +96,33 @@ class Comment(NS_Node):
 
     def iter_depth(self):
         return range(0, self.get_depth())
+
+    def save(self, *args, **kwargs):
+        self.time = self.time or datetime.datetime.now()
+        return super(Comment, self).save(*args, **kwargs)
+
+    def is_shadowed(self):
+        return \
+            (self.mark <= 0.5) if DEBUG \
+            else (self.vote_set.count() > 5 and self.mark < 0.3)
+
+    def is_hidden(self):
+        return (DEBUG or self.vote_set.count() > 5) and self.mark < 0.1
+
+    @property
+    def highest_mark(self):
+        return 1
+
+    @property
+    def lowest_mark(self):
+        return 0
+
+    def get_likes(self):
+        return self.vote_set.filter(mark=1)
+    
+    def get_dislikes(self):
+        return self.vote_set.filter(mark=0)
+
 
 
 from django.contrib.admin import site, ModelAdmin

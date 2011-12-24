@@ -20,17 +20,33 @@
     {%block comments%}
         <div class = "comments">
             {%for c in comments%}
-            <div class = "comment" id = "comment{{c.pk}}">
+            <div class = "comment{%if c.is_shadowed%} shadowed{%endif%}" id = "comment{{c.pk}}">
                 
                 {%for i in c.iter_depth%}
                 <span class = "wrap">
                 {%endfor%}
+                {%if show_hidden or not c.is_hidden%}
                     <div class = "comment-content{%if c == just_added%} just_added{%endif%}">
                         <span class = "header">
                             by <em><strong>{{c.owner}}</strong></em>
                             at {{c.time}}
                             <a href = "#comment{{c.pk}}">#</a>
                             {%if c.get_parent%}<a href = "#comment{{c.get_parent.pk}}">Up</a>{%endif%}
+                            <span class = "mark">
+                                <span class = "likes">{{c.get_likes.count}}</span> |
+                                <span class = "dislikes">{{c.get_dislikes.count}}</span>
+                                {%if c.has_votes%}| <span class = "avg">Avg: {{c.mark}}</span>{%endif%}
+                                {%if user.is_authenticated and c.votingobject_ptr not in voted and user.profile != c.owner%}
+                                <form method = "post" action = "like_{{c.pk}}/">
+                                    {%csrf_token%}
+                                    <button>Agree</button>
+                                </form>
+                                <form method = "post" action = "dislike_{{c.pk}}/">
+                                    {%csrf_token%}
+                                    <button>Disagree</button>
+                                </form>
+                                {%endif%}
+                            </span>
                         </span><br>
                         <div class = "comment-text">{{c.text}}</div>
                     </div>
@@ -44,11 +60,13 @@
                             <button>Answer</button>
                         </form>
                     </div>
+                {%else%}
+                    <hr style = "padding:0; margin:0 0 0 0; background-color: red; width: 300px; height: 5px;">
+                {%endif%}
                 {%for i in c.iter_depth%}
                 </span>
                 {%endfor%}
-                
-            </div>
+            </div>                
             {%endfor%}
         </div>
         <hr>

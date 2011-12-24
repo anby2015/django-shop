@@ -9,6 +9,7 @@ from django.db.models import F
 from goods.models import Product, Category, Comment
 from main.class_decorators import login_required
 from users.views import get_redirect_url
+from moderation.models import Vote
 
 PAGINATE_BY = 24
 
@@ -85,24 +86,34 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
     
     def get_context_data(self, **kwargs):
         product = self.kwargs['pk']
+        comments = list(Comment.get_tree().filter(
+            product__id=product
+        ))
         c = {
             'product': self.object,
-            'comments': Comment.get_tree().filter(
-                product__id=product
-            ),
+            'comments': comments,
         }
-        last = self.object.comment_set.filter(
-            owner=self.request.user,
-            time__gt=datetime.datetime.now() - datetime.timedelta(seconds=3)
-        )
-        if last:
-            c['just_added'] = last[0]
+        c['voted'] = [v.obj for v in Vote.objects.filter(
+            obj__in=[cm.votingobject_ptr for cm in comments],
+            owner=self.request.user.profile
+        )]
+        
+        try:
+            last = self.object.comment_set.get(
+                owner=self.request.user,
+                time__gt=datetime.datetime.now() - datetime.timedelta(seconds=3)
+            )
+            c['just_added'] = last
+        except:
+            pass
         return c
 
 
 @login_required
 class AddCommentView(View):
-    http_method_names = ['post']
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect('../')
 
     def post(self, request, product_id):
         text = request.POST.get('text')
@@ -135,3 +146,11 @@ class FullTreeView(TemplateView):
         ))
         objects = [{'category': i, 'nesting': range(0, i.depth())} for i in l]
         return {'objects': objects}
+
+@login_required
+class CommentVoteView(View):
+    http_method_names = ['post']
+
+    def post(self, request, product_id, cid, mark):
+        Comment.objects.get(pk=cid).vote(request.user.profile, mark)
+        return HttpResponseRedirect('../')

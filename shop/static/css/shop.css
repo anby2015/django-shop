@@ -122,3 +122,36 @@ input[type=radio][name=answer_to]{
 .comment-content.just_added{
     background-color: lightBlue;
 }
+
+.mark form{
+    display: inline;
+}
+
+.mark form button{
+    font-size: 8pt;
+    padding: 0;
+}
+
+.mark form[action^=like]{
+    margin-left: 20px;
+}
+
+.mark .likes{
+    color: green;
+}
+.mark .dislikes{
+    color: red;
+}
+.mark .avg{
+    color: blue;
+}
+
+.comment.shadowed{
+    opacity: 0.2;
+}
+.comment.shadowed:hover{
+    opacity: 1;
+}
+.comment.shadowed:hover hr{
+    opacity: 0.2;
+}
