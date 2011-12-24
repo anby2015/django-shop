@@ -15,7 +15,7 @@
 <div class = "container" class = "showgrid">
     <div id = "header" class = "span-24">
         <div id = "promo_header" class="span-{%block header_blueprint_size%}24{%endblock%}" class = "left large">
-            ~~ django-shop ~~
+            {%if users_ip == '77.35.214.49'%}Hello, pousqie{%else%}~~ django-shop ~~{%endif%}
         </div>
         {%block header_right%}{pretty colourful picture}{%endblock%}
     </div>

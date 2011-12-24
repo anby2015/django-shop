@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'users',
     'goods',
     'cart',
+    'moderation',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -171,6 +172,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #    'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'users.context_processors.auth_form',
+    'users.context_processors.users_ip',
     'goods.context_processors.get_category_roots',
 )
 
