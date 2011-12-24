@@ -12,6 +12,7 @@ films, created = Category.objects.get_or_create(slug='films', defaults={
 qqq, created = Profile.objects.get_or_create(username='qqq')
 if created:
     qqq.set_password('qqq')
+    qqq.save()
 i = 0
 for l in flist:
     i+=1
