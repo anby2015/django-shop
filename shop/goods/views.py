@@ -4,10 +4,10 @@ from django.views.generic.base import View, TemplateResponseMixin, TemplateView
 from django.views.generic.list import BaseListView
 from django.views.generic.detail import BaseDetailView
 from django.http import HttpResponseRedirect
-from django.db.models import F
+from django.db.models import F, Avg
 
 from goods.models import Product, Category, Comment
-from main.class_decorators import login_required
+from main.class_decorators import login_required, unbanned_only
 from users.views import get_redirect_url
 from moderation.models import Vote
 
@@ -93,10 +93,11 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
             'product': self.object,
             'comments': comments,
         }
-        c['voted'] = [v.obj for v in Vote.objects.filter(
-            obj__in=[cm.votingobject_ptr for cm in comments],
-            owner=self.request.user.profile
-        )]
+        if self.request.user.is_authenticated():
+            c['voted'] = [v.obj for v in Vote.objects.filter(
+                obj__in=[cm.votingobject_ptr for cm in comments],
+                owner=self.request.user.profile
+            )]
         
         try:
             last = self.object.comment_set.get(
@@ -108,7 +109,7 @@ class ProductView(TemplateResponseMixin, BaseDetailView):
             pass
         return c
 
-
+@unbanned_only
 @login_required
 class AddCommentView(View):
 
@@ -147,10 +148,29 @@ class FullTreeView(TemplateView):
         objects = [{'category': i, 'nesting': range(0, i.depth())} for i in l]
         return {'objects': objects}
 
+def vote(request, model, pk, mark):
+    c = model.objects.get(pk=pk)
+    return c, c.vote(request.user.profile, mark)
+
+def try_ban(owner):
+    new_comments = owner.comment_set.filter(
+        time__gt=owner.unban_time
+    ).only('votingobject_ptr')
+    
+    votes = Vote.objects.filter(obj__in=new_comments)
+    avg = votes.aggregate(Avg('mark'))
+    if avg.values()[0] < 0.3:
+        owner.ban()
+    return avg
+
+@unbanned_only
 @login_required
 class CommentVoteView(View):
     http_method_names = ['post']
 
     def post(self, request, product_id, cid, mark):
-        Comment.objects.get(pk=cid).vote(request.user.profile, mark)
+        c, v = vote(request, Comment, cid, mark)
+        try_ban(c.owner)
+            
+
         return HttpResponseRedirect('../')
