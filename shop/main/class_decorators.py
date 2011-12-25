@@ -9,6 +9,8 @@ from django.views.generic.edit import FormMixin
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
+
+from moderation.decorators import unbanned_only
 # end patching decorators import
 
 def patches(method_name, deco=None):
@@ -49,6 +51,7 @@ patches_view = patches('dispatch')
 login_required = patches_view(login_required)
 csrf_protect = patches_view(csrf_protect)
 never_cache = patches_view(never_cache)
+unbanned_only = patches_view(unbanned_only)
 
 def patch_method(default=None):
     'class decorator factory. decorates method with specified name'

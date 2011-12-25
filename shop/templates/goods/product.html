@@ -36,7 +36,7 @@
                                 <span class = "likes">{{c.get_likes.count}}</span> |
                                 <span class = "dislikes">{{c.get_dislikes.count}}</span>
                                 {%if c.has_votes%}| <span class = "avg">Avg: {{c.mark}}</span>{%endif%}
-                                {%if user.is_authenticated and c.votingobject_ptr not in voted and user.profile != c.owner%}
+                                {%if user.is_authenticated and c.votingobject_ptr not in voted and user.profile != c.owner and not user.profile.is_banned%}
                                 <form method = "post" action = "like_{{c.pk}}/">
                                     {%csrf_token%}
                                     <button>Agree</button>
@@ -50,7 +50,9 @@
                         </span><br>
                         <div class = "comment-text">{{c.text}}</div>
                     </div>
+                    {%if not user.is_authenticated or not user.profile.is_banned%}
                     <a href = "#ans_{{c.pk}}">Answer</a>
+                    {%endif%}
                     <div class = "before_form" id = "ans_{{c.pk}}"></div>
                     <div>
                         <form class = "answer_form" action = "add_comment/" method = "post">
@@ -71,12 +73,16 @@
         </div>
         <hr>
         <div class = "add_comment">
+        {%if user.is_authenticated and user.profile.is_banned%}
+        <h1>You are banned until {{user.profile.unban_time}}</h1><hr>
+        {%else%}
             <form id = "add_comment_form" action = "add_comment/" method = "post">
                 {%csrf_token%}
                 <!--<input type = "text" name = "answer_to">-->
                 <textarea name = "text"></textarea>
                 <button>Add comment</button>
             </form>
+        {%endif%}
         </div>
     {%endblock%}
 {%endblock%}
