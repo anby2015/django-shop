@@ -115,7 +115,7 @@ class Comment(NS_Node, moderation.models.VotingObject):
 
     def is_shadowed(self):
         return \
-            (self.mark <= 0.5) if DEBUG \
+            (self.has_votes() and self.mark <= 0.5) if DEBUG \
             else (self.vote_set.count() > 5 and self.mark < 0.3)
 
     def is_hidden(self):
