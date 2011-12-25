@@ -148,8 +148,10 @@ class FullTreeView(TemplateView):
         objects = [{'category': i, 'nesting': range(0, i.depth())} for i in l]
         return {'objects': objects}
 
-def vote(request, model, pk, mark):
+def vote(request, model, pk, mark, allow_self_vote=False, owner_field='owner'):
     c = model.objects.get(pk=pk)
+    if not allow_self_vote and getattr(c, owner_field) == request.user.profile:
+        return c, None
     return c, c.vote(request.user.profile, mark)
 
 def try_ban(owner):
