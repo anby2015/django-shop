@@ -1,5 +1,3 @@
-import urlparse
-
 from django.views.generic.base import View, TemplateResponseMixin
 from django.views.generic.edit import FormView, BaseCreateView, BaseUpdateView
 from django.contrib.auth import login, logout, authenticate, REDIRECT_FIELD_NAME
@@ -11,24 +9,12 @@ from django.shortcuts import render
 from main.class_decorators import login_required, csrf_protect, never_cache, unauthorized_only
 from users.forms import AuthForm, RegisterUserForm, ProfileForm
 from users.models import Profile
+from users.utils import get_prev_url, get_redirect_url
 
 require_GET_POST = require_http_methods(['GET', 'POST'])
 
 if not hasattr(settings, 'REDIRECT_FIELD_NAME'):
     setattr(settings, 'REDIRECT_FIELD_NAME', REDIRECT_FIELD_NAME)
-
-def get_prev_url(request):
-    return request.META.get('HTTP_REFERER', '')
-
-def get_redirect_url(request, redirect_field_name=settings.REDIRECT_FIELD_NAME):
-    redir_to = request.REQUEST.get(redirect_field_name) or get_prev_url(request)
-    
-    # Security check -- don't allow redirection to a different host.
-    netloc = urlparse.urlparse(redir_to)[1]
-    if not redir_to or netloc and netloc != request.get_host():
-        redir_to = settings.LOGIN_REDIRECT_URL
-    return redir_to
-
 
 class AuthMixin(object):
     
