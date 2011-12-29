@@ -21,6 +21,21 @@
         </tr>
         {%endfor%}
     </table>
+    <table class = "cart span-16" style = "table-layout:fixed;">
+        <hr>
+        <tr>
+            <td>Your referral fee: <strong>{{user.profile.fee}} &euro;</strong></td>
+            <td></td>
+            <td>
+                Order cost: <strong>{{cart.total_sum}} &euro;</strong>
+            </td>
+        </tr>
+        <tr>
+            <td><hr>You will totally spend:</td>
+            <td></td>
+            <td><strong>{{cart.payment}} &euro;</strong></td>
+        </tr>
+    </table>
 </div>
 <form id = "order_form" action = "/cart/order/" method = "post">
     {%csrf_token%}

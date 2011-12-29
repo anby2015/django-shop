@@ -75,6 +75,10 @@ class Product(moderation.models.VotingObject):
     date = DateTimeField(auto_now_add=True)
     last_modified = DateTimeField(auto_now=True)
 
+    @property
+    def absolute_url(self):
+        return '/products/%d/' % self.pk
+
     def is_shadowed(self):
         return self.mark <= 2.5
 

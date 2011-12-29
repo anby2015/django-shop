@@ -126,11 +126,13 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'treebeard',
     'main',
     'users',
     'goods',
     'cart',
     'moderation',
+    'referrals'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -169,7 +171,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
-#    'django.core.context_processors.request',
+    'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'users.context_processors.auth_form',
     'users.context_processors.users_ip',

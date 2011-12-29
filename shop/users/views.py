@@ -9,6 +9,7 @@ from django.shortcuts import render
 from main.class_decorators import login_required, csrf_protect, never_cache, unauthorized_only
 from users.forms import AuthForm, RegisterUserForm, ProfileForm
 from users.models import Profile
+from referrals.models import Referrer
 from users.utils import get_prev_url, get_redirect_url
 
 require_GET_POST = require_http_methods(['GET', 'POST'])
@@ -84,9 +85,19 @@ class Register(AuthMixin, TemplateResponseMixin, BaseCreateView):
 
     def form_valid(self, form):
         res = super(Register, self).form_valid(form)
-        self.object.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(self.request, self.object)
-        return res
+        try:
+            uname = self.request.session['referrer']
+            p = Profile.objects.get(username=uname)
+            r = p.referrer or Referrer.add_root(profile=p)
+            r.add_child(self.object.referrer)
+        finally:
+            self.object.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(self.request, self.object)
+            return res
+    
+    def get_form_kwargs(self):
+        self.kwargs = super(Register, self).get_form_kwargs()
+        return self.kwargs
     
     
 class ProfileMixin(object):

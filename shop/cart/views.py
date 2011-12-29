@@ -51,6 +51,7 @@ class CartView(TemplateView):
 		try:
 			cart = Cart.objects.get(assignee=self.request.user)
 			ctx['products'] = cart.storageitem_set
+			ctx['cart'] = cart
 		finally:
 			return ctx
 

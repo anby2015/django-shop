@@ -32,6 +32,8 @@ urlpatterns = patterns('',
     url(r'^cart/', include('cart.urls')),
 
     url(r'^tree/$', FullTreeView.as_view()),
+
+    url(r'^ref/', include('referrals.urls')),
     
     url(
         r'^media/(?P<path>.*)$', 'django.views.static.serve',
