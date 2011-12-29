@@ -9,16 +9,24 @@
     -><a href = "/categories/{{product.category.as_url}}">{{product.category}}</a>
     &nbsp;&lt;=== You're here!
 </div>
-<div id = "product_detail">
-    <span class = "text_info">
-        <div class = "name">{{product.name}}</div>
-        <div class = "cost">Cost: {{product.cost}} &euro;</div>
-        <div class = "description">Description:<br>{{product.description}}</div>
-    </span>
+<div class = "span-12">
+    <div id = "product_detail">
+        <span class = "text_info">
+            <div class = "name"><strong>{{product.name}}</strong></div>
+            <div class = "cost">Cost: {{product.cost}} &euro;</div>
+            <div class = "description">Description:<br>{{product.description}}</div>
+        </span>
+    </div>
+    <form action = "/cart/add/" method = "post">
+        {%csrf_token%}
+        <input style = "width: 50px;" type = "text" name = "count" value = "1">
+        <button>Add</button>
+        <input type = "hidden" name = "product_id" value = "{{product.pk}}">
+    </form>
+    {%if user.is_authenticated%}
+    <strong><a href = "/ref/userinvite/{{user.username}}/{{product.pk}}/">Reflink</a></strong>
+    {%endif%}
 </div>
-{%if user.is_authenticated%}
-<strong><a href = "/ref/userinvite/{{user.username}}/{{product.pk}}/">Reflink</a></strong>
-{%endif%}
 <hr>
     {%block comments%}
         <div class = "comments">

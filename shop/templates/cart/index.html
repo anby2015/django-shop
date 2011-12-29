@@ -24,16 +24,16 @@
     <table class = "cart span-16" style = "table-layout:fixed;">
         <hr>
         <tr>
-            <td>Your referral fee: <strong>{{user.profile.fee}} &euro;</strong></td>
+            <td>Your referral fee: <strong>{{user.profile.fee|floatformat:2}} &euro;</strong></td>
             <td></td>
             <td>
-                Order cost: <strong>{{cart.total_sum}} &euro;</strong>
+                Order cost: <strong>{{cart.total_sum|floatformat:2}} &euro;</strong>
             </td>
         </tr>
         <tr>
             <td><hr>You will totally spend:</td>
             <td></td>
-            <td><strong>{{cart.payment}} &euro;</strong></td>
+            <td><strong>{{cart.payment|floatformat:2}} &euro;</strong></td>
         </tr>
     </table>
 </div>
