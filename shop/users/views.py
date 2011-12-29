@@ -88,9 +88,11 @@ class Register(AuthMixin, TemplateResponseMixin, BaseCreateView):
         try:
             uname = self.request.session['referrer']
             p = Profile.objects.get(username=uname)
-            r = p.referrer or Referrer.add_root(profile=p)
-            r.add_child(self.object.referrer)
-        finally:
+            r = p.get_referrer() or Referrer.add_root(profile=p)
+            r.add_child(profile=self.object)
+        except Exception as e:
+            print "BEEEEEEEP " + str(e)
+        else:
             self.object.backend = 'django.contrib.auth.backends.ModelBackend'
             login(self.request, self.object)
             return res
