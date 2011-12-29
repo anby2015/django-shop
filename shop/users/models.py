@@ -47,13 +47,9 @@ class Profile(User):
         ref = self.get_referrer()
         if not ref:
             return
-        print "HERE"
-        print str(ref.get_ancestors())
         for r in ref.get_ancestors().select_related('profile').reverse():
-            print "HDHAHAAHAHA"
             if not fee:
                 break
-            print "LOL" + str(r)
             r.profile.fee += fee
             r.profile.save()
             fee = int(fee * FEE_MULTIPLIER * 100) / 100.0
