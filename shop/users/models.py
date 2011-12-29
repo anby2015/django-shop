@@ -35,10 +35,7 @@ class Profile(User):
     fee = FloatField(default=0)
 
     def get_referrer(self):
-        try:
-            return self.referrer
-        except Exception as e:
-            return None
+        return getattr(self.__dict__, 'referrer')
 
     @transaction.commit_on_success
     def add_fee(self, fee):
