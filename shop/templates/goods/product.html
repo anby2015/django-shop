@@ -16,6 +16,9 @@
         <div class = "description">Description:<br>{{product.description}}</div>
     </span>
 </div>
+{%if user.is_authenticated%}
+<strong><a href = "/ref/userinvite/{{user.username}}/{{product.pk}}/">Reflink</a></strong>
+{%endif%}
 <hr>
     {%block comments%}
         <div class = "comments">
