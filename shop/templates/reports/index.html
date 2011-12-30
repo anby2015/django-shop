@@ -1,0 +1,39 @@
+{%extends "base.html"%}
+
+{%block content%}
+<form method = "get">
+    <select name = "param1">
+        {%for f in fields%}
+        <option value = "{{f}}"{%if param1 == f%} selected{%endif%}>{{f}}</option>
+        {%endfor%}
+    </select>
+    <select name = "param2">
+        {%for f in fields%}
+        <option value = "{{f}}"{%if param2 == f%} selected{%endif%}>{{f}}</option>
+        {%endfor%}
+    </select>
+    <!--<input type = "checkbox" name = "show_empty" caption = "show empty">-->
+    <button>Generate</button>
+    {{matrix|pprint}}
+</form>
+{%if param1 and param2%}
+
+{% autoescape off %}
+<script type = "text/javascript">
+    var map = {{map}}, paramsx = {{paramsx}}, paramsy = {{paramsy}};
+</script>
+{% endautoescape %}
+
+<script type = "text/javascript" src = "{{STATIC_URL}}js/highcharts/highcharts.js"></script>
+<script type = "text/javascript" src = "{{STATIC_URL}}js/chart.js"></script>
+
+<div id = "chart"></div>
+
+<form method = "post" action = "gen_pdf/">
+    {%csrf_token%}
+    <input type = "hidden" name = "param1" value = "{{param1}}">
+    <input type = "hidden" name = "param2" value = "{{param2}}">
+    <button>Download as pdf</button>
+</form>
+{%endif%}
+{%endblock%}

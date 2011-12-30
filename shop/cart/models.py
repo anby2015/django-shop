@@ -1,7 +1,7 @@
 from django.db.models import (
     Model, OneToOneField, ForeignKey, FloatField,
     ManyToManyField, TextField, PositiveIntegerField,
-    Sum, F,
+    DateTimeField, Sum, F,
 )
 from django.db import transaction
 
@@ -33,6 +33,7 @@ class Order(Storage):
     city = TextField(**EMPTY)
     address = TextField(**EMPTY)
     payment = FloatField()
+    date = DateTimeField(auto_now_add=True)
 
 REFERRER_COST_MULTIPLIER = 0.15
 

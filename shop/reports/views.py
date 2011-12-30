@@ -1,0 +1,58 @@
+from datetime import datetime
+
+from django.http import HttpResponseRedirect
+from django.views.generic.base import View, TemplateResponseMixin, TemplateView
+from django.utils import simplejson as json
+
+from reports.functions import get_report_matrix, meta, generate_pdf
+
+def get_matrix_from_request(request):
+		get = request.REQUEST.get
+		params = get('param1'), get('param2')
+		e = True#get('show_empty', False)
+		m = get_report_matrix(*params, fill_empty=e) if params[0] and params[1] else None
+		return m, params
+
+class ReportView(TemplateView):
+	template_name = 'reports/index.html'
+	def get_context_data(self, **kwargs):
+		ctx = {
+			'fields': meta,
+		}
+		m, params = get_matrix_from_request(self.request)
+		_d = json.dumps
+		if m:
+			m, l1, l2 = m
+			
+
+			n = {}
+			for k1, d in m.iteritems():
+				for k2, v in d.iteritems():
+					n.setdefault(k2, {})
+					n[k2][k1] = v
+			t = [v.values() for k, v in n.iteritems()]	
+			ctx.update({
+				'matrix': m,
+				'param1': params[0],
+				'param2': params[1],
+				'map': _d(t),
+				'paramsx': _d(list(l1)),
+				'paramsy': _d(list(l2)),
+			})
+		return ctx
+
+class GenPdfView(View):
+	def post(self, request, *args, **kwargs):
+		d = 'static/pdf/%s' % request.user.username
+		from os import system
+		system('mkdir -p ' + d)
+		path = '%s/%s.pdf' % (d, str(datetime.now()))
+		m, params = get_matrix_from_request(request)
+		if m:
+			m, l1, l2 = m
+			t = [['%.2f' % i for i in v.values()] for k, v in m.iteritems()]
+			for l, h in zip(t, l1):
+				l.insert(0, h)
+			t = [['%s/%s' % params] + m.values()[0].keys()] + t
+			generate_pdf(path, t)
+		return HttpResponseRedirect('/' + path)
