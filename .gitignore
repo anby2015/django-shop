@@ -1,3 +1,5 @@
 *.pyc
 *.sqlite
 shop/static/js/jquery*.js
+shop/static/js/jit/Examples/*
+shop/static/pdf/*
