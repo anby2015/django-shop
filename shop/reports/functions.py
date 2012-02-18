@@ -32,7 +32,7 @@ def get_report_matrix_query(*args):
 	x = (meta[i] for i in args)
 	rels, fields = zip(*tuple(x))
 	params = ('param1', 'param2',)
-	q = StorageItem.objects.all().select_related('product', *rels).extra(
+	q = StorageItem.objects.all().select_related('product', 'storage__order', *rels).extra(
 		select=dict(zip(params, fields), **{
 			'report_sum': 'SUM("goods_product"."cost"*"cart_storageitem"."count")',
 		}),
