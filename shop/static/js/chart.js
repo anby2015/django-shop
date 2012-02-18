@@ -71,4 +71,14 @@ $(document).ready(function() {
     });
     //load JSON data.
     barChart.loadJSON(json);
+    
+    var list = $jit.id('id-list');
+    //dynamically add legend to list
+    var legend = barChart.getLegend(),
+        listItems = [];
+    for(var name in legend) {
+      listItems.push('<div class=\'bar-query-color\' style=\'background-color:'
+          + legend[name] +'\'>&nbsp;</div>' + name);
+    }
+    list.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 });

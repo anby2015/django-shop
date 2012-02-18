@@ -162,3 +162,11 @@ input[type=radio][name=answer_to]{
     padding: 2px;
     background-color: lightBlue;
 }
+
+.bar-query-color{
+    border:1px solid #999999;
+    float:left;
+    height:10px;
+    margin:3px 3px 0 0;
+    width:10px;
+}
