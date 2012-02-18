@@ -8,6 +8,8 @@ from cart.models import StorageItem
 meta = {
 	'Username':
 		('storage__order__assignee__user', '"auth_user"."username"'),
+	'User\'s first name':
+		('storage__order__assignee__user', '"auth_user"."first_name"'),
 	'Product':
 		('product', '"goods_product"."name"'),
 	'Country':
