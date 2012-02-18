@@ -1,3 +1,4 @@
+import re
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
@@ -16,11 +17,11 @@ meta = {
 	'Category':
 		('product__category', '"goods_category"."name"'),
 	'Year':
-		('storage__order', 'strftime("%%%%y", "cart_order"."date")'),
+		('storage__order', 'strftime("%%%%Y", "cart_order"."date")'),
 	'Month':
 		('storage__order', 'strftime("%%%%m", "cart_order"."date")'),
 	'Day':
-		('storage__order', 'strftime("%%%%y", "cart_order"."date")'),
+		('storage__order', 'strftime("%%%%d", "cart_order"."date")'),
 }
 
 class NotEnoughArguments(Exception): pass
@@ -28,17 +29,21 @@ class NotEnoughArguments(Exception): pass
 def get_report_matrix_query(*args):
 	if len(args) != 2:
 		raise NotEnoughArguments()
-	x= (meta[i] for i in args)
+	x = (meta[i] for i in args)
 	rels, fields = zip(*tuple(x))
 	params = ('param1', 'param2',)
 	q = StorageItem.objects.all().select_related('product', *rels).extra(
 		select=dict(zip(params, fields), **{
-			'report_sum': 'SUM("goods_product"."cost"*count)',
+			'report_sum': 'SUM("goods_product"."cost"*"cart_storageitem"."count")',
 		}),
 		order_by=list(params),
+		where=['"cart_order"."storage_ptr_id" IS NOT NULL']
 	)
 	s, o = tuple(str(q.query).split('ORDER BY'))
 	query = s + ' GROUP BY ' + ', '.join(params) + ' ORDER BY ' + o
+
+	sub = r'\s*(SELECT .* AS "report_sum",.* AS "param2", .* AS "param1").* FROM' #first 3 fields
+	query = re.subn(sub, r'\1, "cart_storageitem"."id" FROM ', query, flags=re.M and re.S)[0]
 
 	return StorageItem.objects.raw(query)
 
