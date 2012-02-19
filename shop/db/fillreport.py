@@ -5,12 +5,14 @@ import datetime
 
 from django.db import transaction
 
+import users.countries
 from users.models import Profile
 from cart.models import Order, StorageItem
 from goods.models import Product
 
 USERNAME_FORMAT = 'test__%d'
 COUNTRIES_COUNT = 20
+COUNTRIES = users.countries.COUNTRIES[:COUNTRIES_COUNT]
 COOL_CITIES = ['Лондон', 'Санкт-Петербург', 'Копенгаген', 'Бомбей', 'Сидней', 'Лиссабон', 'Амстердам',] #(c) OS Larkina
 
 random_item = lambda l: l[random.randint(0, len(l) - 1)]
@@ -25,7 +27,7 @@ def fill_users():
 		ps.append(Profile.objects.create(
 			username=USERNAME_FORMAT % i,
 			first_name=random_item(ns),
-			country=random.randint(0, COUNTRIES_COUNT-1),
+			country=random_item(COUNTRIES)[0],
 		))
 	return ps
 
