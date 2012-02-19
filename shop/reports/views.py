@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import OrderedDict
 
 from django.http import HttpResponseRedirect
 from django.views.generic.base import View, TemplateResponseMixin, TemplateView
@@ -24,20 +25,20 @@ class ReportView(TemplateView):
 		if m:
 			m, l1, l2 = m
 			
+			t = []
+			for i in l2:
+				l = []
+				for j in l1:
+					l += [m[j][i]]
+				t += [l]
 
-			n = {}
-			for k1, d in m.iteritems():
-				for k2, v in d.iteritems():
-					n.setdefault(k2, {})
-					n[k2][k1] = v
-			t = [v.values() for k, v in n.iteritems()]	
 			ctx.update({
 				'matrix': m,
 				'param1': params[0],
 				'param2': params[1],
 				'map': _d(t),
-				'paramsx': _d(list(l1)),
 				'paramsy': _d(list(l2)),
+				'paramsx': _d(list(l1)),
 			})
 		return ctx
 

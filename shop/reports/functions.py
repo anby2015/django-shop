@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
@@ -51,19 +52,18 @@ def get_report_matrix_query(*args):
 
 def get_report_matrix(param1, param2, query=None, fill_empty=True):
 	q = query or get_report_matrix_query(param1, param2)
-	m = {}
+	m = OrderedDict()
 	l1, l2 = set(), set()
 	for i in q:
 		m.setdefault(i.param1, {})
 		m[i.param1][i.param2] = i.report_sum
 		l1.add(i.param1)
 		l2.add(i.param2)
-
 	if fill_empty:
 		for k, v in m.iteritems():
 			for j in l2:
 				v.setdefault(j, 0.0)
-	return m, l1, l2
+	return m, sorted(l1), sorted(l2)
 
 def generate_pdf(filename, table, fill_empty=True):
 	doc = SimpleDocTemplate(filename, pagesize=letter)
