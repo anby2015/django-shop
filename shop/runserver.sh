@@ -1,1 +1,1 @@
-./manage.py runserver --werkzeug --staticfiles=True
+./manage.py runserver $@ --werkzeug --staticfiles=True
