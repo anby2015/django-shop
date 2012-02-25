@@ -66,7 +66,7 @@ $(document).ready(function() {
         enable: true,
         onShow: function(tip, elem) {
           tip.innerHTML = '<span class = "bar-tip">' +
-            "<b>" + elem.name + "</b>: " + elem.value +
+            "<strong>" + elem.name + "</strong>: " + elem.value +
         '</span>';
         }
       }
