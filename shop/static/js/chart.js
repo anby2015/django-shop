@@ -49,7 +49,9 @@ $(document).ready(function() {
       //bars style
       type: useGradients? 'grouped:gradient' : 'grouped',
       //whether to show the aggregation of the values
-      showAggregates:true,
+      showAggregates:function(paramy, value){
+        return Math.round(value * 100) / 100
+      },
       //whether to show the labels for the bars
       showLabels:true,
       //labels style
