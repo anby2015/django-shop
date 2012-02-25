@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html>
-<head>
+<head>{%block head%}
     <title>{%block title%}django-shop{%endblock%}</title>
     <link rel="stylesheet" href="{{STATIC_URL}}css/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="{{STATIC_URL}}css/blueprint/print.css" type="text/css" media="print">
@@ -10,7 +10,8 @@
     
     <link rel="stylesheet" href="{{STATIC_URL}}css/shop.css" type="text/css">
     <script type = "text/javascript" src = "{{STATIC_URL}}js/jquery.js"></script>
-</head>
+    {%block header_extra%}{%endblock%}
+</head>{%endblock%}
 <body>{%block fullbody%}
 <div class = "container" class = "showgrid">
     <div id = "header" class = "span-24">
