@@ -16,11 +16,12 @@
 }
 
 #top_userbar button{
-    height: 20px;
     font-size: 50%;
     width: 50px;
-    padding: 0;
+    padding: 2px;
     margin: 0;
+    margin-top: 2px;
+    border: 0;
     font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
@@ -169,4 +170,25 @@ input[type=radio][name=answer_to]{
     height:10px;
     margin:3px 3px 0 0;
     width:10px;
+}
+
+.listview, .chosen_list{
+    width: 300px;
+}
+
+.swapper1{
+    position: absolute;
+}
+
+.filter_page{
+    min-height: 24px;
+    min-width: 24px;
+}
+
+.filter_page a{
+    margin-right: 2px;
+}
+
+.filter_page a:hover{
+    background-color: lightBlue;
 }

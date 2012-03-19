@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'cart',
     'moderation',
     'referrals',
+    'reports',
 )
 
 

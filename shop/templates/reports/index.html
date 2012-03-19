@@ -1,8 +1,12 @@
 {%extends "base.html"%}
 
 {%block header_extra%}
+<link rel="stylesheet" href="{{STATIC_URL}}/js/jqueryui/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css">
 <script type = "text/javascript" src = "{{STATIC_URL}}js/jit/jit.js"></script>
 <script type = "text/javascript" src = "{{STATIC_URL}}js/chart.js"></script>
+<script type = "text/javascript" src = "{{STATIC_URL}}js/filters.js"></script>
+<script type = "text/javascript" src = "{{STATIC_URL}}js/fm.js"></script>
+<script type = "text/javascript" src = "{{STATIC_URL}}js/jqueryui/jquery-ui.min.js"></script>
 {%endblock%}
 
 {%block content%}
@@ -21,11 +25,18 @@
     <button>Generate</button>
 <!--    {{matrix|pprint}}-->
 </form>
+
+<div><form id = "filters">{%if debug%}{%csrf_token%}{%endif%}
+    <ul id = "filter_list">
+    </ul>
+</form></div>
+
 {%if param1 and param2%}
 
 {% autoescape off %}
 <script type = "text/javascript">
     var map = {{map}}, paramsx = {{paramsx}}, paramsy = {{paramsy}};
+    var tables = {{filters}};
 </script>
 {% endautoescape %}
 
