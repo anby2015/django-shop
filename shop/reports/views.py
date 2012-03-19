@@ -6,6 +6,7 @@ from django.views.generic.base import View, TemplateResponseMixin, TemplateView
 from django.utils import simplejson as json
 from django.core.paginator import Paginator, EmptyPage
 
+from main.class_decorators import login_required
 from goods.views import PAGINATE_BY
 from reports.functions import get_report_matrix, meta, generate_pdf, filters, f_list, display
 from reports.models import Filter
@@ -24,6 +25,8 @@ def get_matrix_from_request(request, where=None):
 				if params[0] and params[1] else None
 			return m, params
 
+
+@login_required
 class ReportView(TemplateView):
 	template_name = 'reports/index.html'
 	def get_context_data(self, **kwargs):
@@ -65,6 +68,7 @@ class ReportView(TemplateView):
 			return super(ReportView, self).get(request, *args, **kwargs)
 
 
+@login_required
 class GenPdfView(View):
 	def post(self, request, *args, **kwargs):
 		d = 'static/pdf/%s' % request.user.username
@@ -82,6 +86,7 @@ class GenPdfView(View):
 		return HttpResponseRedirect('/' + path)
 
 
+@login_required
 class FilterView(View):
 	def get(self, request, *args, **kwargs):
 		get = request.REQUEST.get
