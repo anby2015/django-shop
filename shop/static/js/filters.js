@@ -130,7 +130,7 @@ $(function(){
 		$d.append(
 			$divid('filter_form' + i).addClass('filter_form')
 		).
-		append($('<button name = "save">save</button>').click(saveClick));
+		append($('<button name = "save" type = "button">save</button>').click(saveClick));
 	}
 	var onselect = function(event, ui){
 		var index = ui.index, $panel = $(ui.panel);

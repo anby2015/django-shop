@@ -42,11 +42,14 @@ filter_meta = {
 	'Category':
 		'name',
 	'Year':
-		'year',
+		#'date__year',
+		'param_year',
 	'Month':
-		'month',
+		#'date__month',
+		'param_month',
 	'Day':
-		'day',
+		#'date__day',
+		'param_day',
 }
 
 isiterable = lambda o: getattr(o, '__iter__', False)
@@ -64,6 +67,8 @@ def get_report_matrix_query(*args, **extra):
 	if extra.get('aggregate'):
 		select['report_sum'] = \
 			'SUM("goods_product"."cost"*"cart_storageitem"."count")'
+	for p in ['Year', 'Month', 'Day',]:
+		select['param_' + p.lower()] = meta[p][1]
 
 	filter_dict, exclude_dict = {}, {}
 	for k, v in extra.get('wherein', {}).iteritems():
@@ -79,12 +84,12 @@ def get_report_matrix_query(*args, **extra):
 
 	q = StorageItem.objects.all().\
 		select_related('product', 'storage__order', *rels).\
-		filter(**filter_dict).exclude(**exclude_dict).\
 		extra(
 			select=select,
 			order_by=order_by,
 			where=['"cart_order"."storage_ptr_id" IS NOT NULL']
-		)
+		).\
+		filter(**filter_dict).exclude(**exclude_dict)
 
 	if isiterable(order):
 		q = q.order_by(tuple(order))
@@ -94,7 +99,7 @@ def get_report_matrix_query(*args, **extra):
 		distinct = tuple(distinct) if isiterable(distinct) else (distinct,)
 		q = q.distinct(*distinct)
 
-	l = str(q.query).split('ORDER BY')
+	l = unicode(q.query).split('ORDER BY')
 	s, o = 'ORDER BY'.join(l[:-1]), l[-1]
 	
 	query = (s or o) + ' GROUP BY ' + ', '.join(params)
@@ -157,14 +162,14 @@ def _report_matrix_lambda_factory(f, **kws):
 		'name': display(i.param1, f),
 	} for i in get_report_matrix_query(f, f, distinct=True, **kws)]
 
-f_list = ['User\'s first name', 'Country', 'City', 'Category', 'Year']
+f_list = ['User\'s first name', 'Country', 'City', 'Category']#, 'Year'] fallen T_T
 filters = {
 	f: _report_matrix_lambda_factory(f) for f in f_list
 }
-f_list += ['Day', 'Month']
+#f_list += ['Day', 'Month']
 f_list.insert(-1, 'Product')
 filters.update({
-	'Day': lambda: range(1, 32),
-	'Month': lambda: range(1, 13),
+#	'Day': lambda: range(1, 32),
+#	'Month': lambda: range(1, 13),
 	'Product': _report_matrix_lambda_factory('Product', order=False)
 })
